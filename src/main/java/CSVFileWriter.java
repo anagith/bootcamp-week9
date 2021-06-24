@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CSVFileWriter {
     private static final String NEW_LINE_SEPARATOR = "\n";
@@ -12,10 +13,12 @@ public class CSVFileWriter {
     private static final Object[] FILE_HEADER = {"name", "surname", "phone", "email", "address", "age"};
 
     public static void writeCSVFile(List<User> users, String fileName) {
+        FileWriter fileWriter = null;
+        CSVPrinter csvFilePrinter = null;
         try {
             CSVFormat csvFileFormat = CSVFormat.DEFAULT.withRecordSeparator(NEW_LINE_SEPARATOR);
-            FileWriter fileWriter = new FileWriter(fileName);
-            CSVPrinter csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
+            fileWriter = new FileWriter(fileName);
+            csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
             csvFilePrinter.printRecord(FILE_HEADER);
             for (int i = 0; i < users.size(); i++) {
                 List<String> list = new ArrayList<>();
@@ -29,6 +32,20 @@ public class CSVFileWriter {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+                csvFilePrinter.close();
+            } catch (IOException e) {
+                System.out.println("Error while flushing/closing fileWriter/csvPrinter !!!");
+                e.printStackTrace();
+            }
         }
+    }
+
+    public static void writeInSeparateFiles(Map<Character, List<User>> map) {
+        map.keySet().stream().forEach(key ->
+                writeCSVFile(map.get(key), key.toString() + ".csv"));
     }
 }

@@ -22,7 +22,8 @@ public class CSVParser {
                 user.setAddress(data[4]);
                 user.setAge(data[5]);
                 return user;
-            }).collect(Collectors.groupingBy(data -> data.getSurname().charAt(0)));
+            }).sorted(new UserComparator())
+                    .collect(Collectors.groupingBy(data -> data.getSurname().charAt(0)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

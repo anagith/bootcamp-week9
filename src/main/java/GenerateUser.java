@@ -9,7 +9,7 @@ public class GenerateUser {
 
     public static List<User> generateUsersArray() {
         final List<User> users = new ArrayList<>();
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 100; i++) {
             users.add(generate());
         }
         return users;
